@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <title>ชำระเงิน</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        button { padding: 5px 10px; cursor: pointer; border: none; }
+        .btn-checkout { background: red; color: white; }
+        .btn-back { background: gray; color: white; margin-right: 10px; }
+    </style>
+</head>
+<body>
+    <h1>ตะกร้าสินค้า</h1>
+    <table id="cartTable">
+        <tr>
+            <th>สินค้า</th>
+            <th>ราคา</th>
+        </tr>
+    </table>
+    <h2 id="total"></h2>
+
+    <button class="btn-back" onclick="goBack()">ย้อนกลับ</button>
+    <button class="btn-checkout" onclick="checkout()">ชำระเงิน</button>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        let table = document.getElementById('cartTable');
+        let total = 0;
+
+        cart.forEach(item => {
+            let row = table.insertRow();
+            // แสดงชื่อสินค้า + ระดับความหวาน
+            row.insertCell(0).textContent = `${item.name} (${item.sweet || 'หวานปกติ'})`;
+            row.insertCell(1).textContent = item.price + " บาท";
+            total += item.price;
+        });
+
+        document.getElementById('total').textContent = "รวม: " + total + " บาท";
+
+        function checkout() {
+            alert("ขอบคุณที่สั่งซื้อ! ยอดชำระ " + total + " บาท");
+            localStorage.removeItem('cart');
+            window.location.href = "index.html";
+        }
+
+        function goBack() {
+            window.location.href = "index.html";
+        }
+    </script>
+</body>
+</html>
