@@ -1,5 +1,29 @@
 <!DOCTYPE html>
 <html lang="th">
+  
+  <!-- ใส่ไว้ใน <body> ตรงมุมบนขวา -->
+<button id="adminBtn" style="
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    padding: 5px 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+">Admin Login</button>
+
+<script>
+  document.getElementById('adminBtn').onclick = function() {
+    // ขอรหัสผ่านอย่างง่าย
+    let pass = prompt("กรุณาใส่รหัสผ่าน Admin:");
+    if (pass === "1234") {  // เปลี่ยนรหัสผ่านตามต้องการ
+      window.location.href = "admin.html";
+    } else if (pass !== null) {
+      alert("รหัสผ่านไม่ถูกต้อง");
+    }
+  }
+</script>
+
+  
   <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -129,6 +153,17 @@
         </div>
         <button onclick="addToCart('ชาเขียวนม', 40)">เพิ่มในตะกร้า</button>
     </div>
+    
+        <div class="product" data-name="ชาเขียวนม" data-price="40">
+        <h3>นมสด</h3>
+        <p>ราคา: 20 บาท</p>
+        <div class="sweet-options">
+            <div class="sweet-btn selected" onclick="selectSweet(this,'นมสด')">น</div>
+            <div class="sweet-btn" onclick="selectSweet(this,'นมสด')">ป</div>
+            <div class="sweet-btn" onclick="selectSweet(this,'นมสด')">ม</div>
+        </div>
+        <button onclick="addToCart('นมสด', 20)">เพิ่มในตะกร้า</button>
+    </div>
 
     <div class="product" data-name="โกโก้เย็น" data-price="45">
         <h3>โกโก้เย็น</h3>
@@ -160,7 +195,7 @@
             Array.from(parent.children).forEach(b => b.classList.remove('selected'));
             btn.classList.add('selected');
 
-            // แปลง น,ป,ม เป็นข้อความเต็ม
+            // แปลง น,ป,มเป็นข้อความเต็ม
             let sweetFull = btn.textContent === 'น' ? 'หวานน้อย' :
                             btn.textContent === 'ป' ? 'หวานปกติ' :
                             'หวานมาก';
