@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>หลังบ้าน - ดูออเดอร์</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px; border: 1px solid #ccc; }
+        select { padding: 5px; }
+        button { padding: 5px 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>หลังบ้าน - ดูออเดอร์</h1>
+    <table id="ordersTable">
+        <tr>
+            <th>รหัสออเดอร์</th>
+            <th>วันที่</th>
+            <th>สินค้า</th>
+            <th>ยอดรวม</th>
+            <th>สถานะ</th>
+            <th>จัดการ</th>
+        </tr>
+    </table>
+
+    <script>
+        let ordersTable = document.getElementById('ordersTable');
+
+        function loadOrders() {
+            let orders = JSON.parse(localStorage.getItem('orders')) || [];
+            ordersTable.innerHTML = `
+                <tr>
+                    <th>รหัสออเดอร์</th>
+                    <th>วันที่</th>
+                    <th>สินค้า</th>
+                    <th>ยอดรวม</th>
+                    <th>สถานะ</th>
+                    <th>จัดการ</th>
+                </tr>
+            `;
+
+            orders.forEach((order, index) => {
+                let row = ordersTable.insertRow();
+                row.insertCell(0).textContent = order.id;
+                row.insertCell(1).textContent = order.date;
+                
+                let productList = order.items.map(i => `${i.name} (${i.sweet || 'หวานปกติ'})`).join(', ');
+                row.insertCell(2).textContent = productList;
+                
+                row.insertCell(3).textContent = order.total + " บาท";
+
+                let statusCell = row.insertCell(4);
+                let select = document.createElement('select');
+                ['รอดำเนินการ', 'กำลังจัดส่ง', 'ส่งแล้ว', 'ยกเลิก'].forEach(status => {
+                    let option = document.createElement('option');
+                    option.value = status;
+                    option.textContent = status;
+                    if (status === order.status) option.selected = true;
+                    select.appendChild(option);
+                });
+                statusCell.appendChild(select);
+
+                let actionCell = row.insertCell(5);
+                let btnSave = document.createElement('button');
+                btnSave.textContent = 'บันทึก';
+                btnSave.onclick = () => {
+                    orders[index].status = select.value;
+                    localStorage.setItem('orders', JSON.stringify(orders));
+                    alert('บันทึกสถานะเรียบร้อย');
+                    loadOrders(); // รีโหลดเพื่ออัพเดทสถานะ
+                };
+                actionCell.appendChild(btnSave);
+            });
+        }
+
+        loadOrders();
+    </script>
+</body>
+</html>
